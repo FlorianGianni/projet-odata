@@ -14,6 +14,9 @@ df3 = pd.read_csv('./data/jain.txt', sep='\t', header=None)
 df4 = pd.read_csv('./data/Aggregation.txt', sep='\t', header=None)
 df5 = pd.read_csv('./data/pathbased.txt', sep='\t', header=None)
 
+####  2.Etude préalable : Comparaison des méthodes de clustering sur des données simulées
+
+### 2.3 Experimentation
 
 ### Affichage des nuages de points
 df1.plot.scatter(x=0, y=1)
@@ -166,4 +169,6 @@ df4.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
 X = df5.to_numpy()
 cluster = DBSCAN(eps=2,min_samples=4).fit_predict(X)
 df5.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
+
+#### 3.Classement des principaux pays du monde en fonction de leur développement
 
