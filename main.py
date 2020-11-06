@@ -209,3 +209,11 @@ plt.show()
 
 ### 3.4 Clustering des donnees
 
+## K-means
+
+K = 12
+kmeans = KMeans(n_clusters=K, random_state=0).fit(Z)
+cluster = kmeans.predict(Z)
+df.insert(1, 'cluster', cluster)
+for i in range(K):
+    print(df[df['cluster'] == i])
