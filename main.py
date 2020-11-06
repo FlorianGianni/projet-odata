@@ -202,4 +202,10 @@ Z = sc.transform(X)
 
 ### 3.3 Recherche de correlations
 
+print(pd.DataFrame(Z).corr())
+pd.plotting.scatter_matrix(pd.DataFrame(df))
+plt.show()
+
+
+### 3.4 Clustering des donnees
 
