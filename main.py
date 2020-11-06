@@ -145,3 +145,25 @@ cluster = Gausienne.predict(X)
 df5.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
 plt.show()
 
+##DBScan
+
+X = df1.to_numpy()
+cluster = DBSCAN(eps=10,min_samples=4).fit_predict(X)
+df1.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
+
+X = df2.to_numpy()
+cluster = DBSCAN(eps=25,min_samples=4).fit_predict(X)
+df2.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
+
+X = df3.to_numpy()
+cluster = DBSCAN(eps=2.7,min_samples=3).fit_predict(X)
+df3.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
+
+X = df4.to_numpy()
+cluster = DBSCAN(eps=2,min_samples=4).fit_predict(X)
+df4.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
+
+X = df5.to_numpy()
+cluster = DBSCAN(eps=2,min_samples=4).fit_predict(X)
+df5.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
+
