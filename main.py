@@ -174,3 +174,5 @@ df5.plot.scatter(x=0,y=1,c=cluster,colormap='plasma')
 
 #### 3.Classement des principaux pays du monde en fonction de leur développement
 
+### 3.1 Examen des données
+
