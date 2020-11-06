@@ -14,6 +14,8 @@ df3 = pd.read_csv('./data/jain.txt', sep='\t', header=None)
 df4 = pd.read_csv('./data/Aggregation.txt', sep='\t', header=None)
 df5 = pd.read_csv('./data/pathbased.txt', sep='\t', header=None)
 
+df6 = pd.read_csv('./data/data.csv')
+
 ####  2.Etude préalable : Comparaison des méthodes de clustering sur des données simulées
 
 ### 2.3 Experimentation
