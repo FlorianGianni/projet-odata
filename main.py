@@ -15,6 +15,7 @@ try:
 except:
     pass
 
+
 ### Importation des donnees
 df1 = pd.read_csv('./data/g2-2-20.txt', sep='     ', header=None, engine='python')
 df2 = pd.read_csv('./data/g2-2-100.txt', sep='     ', header=None, engine='python')
@@ -23,6 +24,7 @@ df4 = pd.read_csv('./data/Aggregation.txt', sep='\t', header=None)
 df5 = pd.read_csv('./data/pathbased.txt', sep='\t', header=None)
 
 df = [df1, df2, df3, df4, df5]
+
 
 ####  2.Etude prealable : Comparaison des methodes de clustering sur des donnees simulees
 
@@ -33,6 +35,7 @@ df = [df1, df2, df3, df4, df5]
 def afficher(df, i, c=None, colormap=None):
     df.plot.scatter(x=0, y=1, c=c, colormap=colormap)
     plt.savefig('./results/etude_prealable/raw-' + str(i) + '.png')
+
 
 afficher(df1, 1)
 afficher(df2, 2)
@@ -109,6 +112,7 @@ def dbscan(df, i, eps, min_samples):
     df.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
     plt.savefig('./results/etude_prealable/dbscan-' + str(i) + '.png')
 
+
 dbscan(df1, 1, eps=10, min_samples=4)
 dbscan(df2, 2, eps=25, min_samples=4)
 dbscan(df3, 3, eps=2.7, min_samples=3)
@@ -116,6 +120,7 @@ dbscan(df4, 4, eps=2, min_samples=4)
 dbscan(df5, 5, eps=2, min_samples=4)
 
 plt.close(fig='all')
+
 
 #### 3.Classement des principaux pays du monde en fonction de leur developpement
 
