@@ -109,11 +109,11 @@ def dbscan(df, i, eps, min_samples):
     df.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
     plt.savefig('./results/etude_prealable/dbscan-' + str(i) + '.png')
 
-dbscan(df1, 1, 10, 4)
-dbscan(df2, 2, 25, 4)
-dbscan(df3, 3, 2.7, 3)
-dbscan(df4, 4, 2, 4)
-dbscan(df5, 5, 2, 4)
+dbscan(df1, 1, eps=10, min_samples=4)
+dbscan(df2, 2, eps=25, min_samples=4)
+dbscan(df3, 3, eps=2.7, min_samples=3)
+dbscan(df4, 4, eps=2, min_samples=4)
+dbscan(df5, 5, eps=2, min_samples=4)
 
 plt.close(fig='all')
 
