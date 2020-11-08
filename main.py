@@ -219,6 +219,7 @@ print(k_means_cluster_score(3))
 print(k_means_cluster_score(4))
 print(k_means_cluster_score(5))
 print(k_means_cluster_score(6))
+print(k_means_cluster_score(7))
 
 methode_coude(10)
 
@@ -238,6 +239,7 @@ def CHA_cluster_score(method, metric, t):
 print(CHA_cluster_score(method='ward', metric = 'euclidean', t=25))
 print(CHA_cluster_score(method='ward', metric = 'euclidean', t=18))
 print(CHA_cluster_score(method='ward', metric = 'euclidean', t=15))
+print(CHA_cluster_score(method='ward', metric = 'euclidean', t=10))
 
 # On choisit K = 4 pour t=18
 
@@ -262,12 +264,15 @@ def dbscan_cluster_score(eps, min_samples):
     print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
-print(dbscan_cluster_score(1,4))
+print(dbscan_cluster_score(1.2,3))
 print(dbscan_cluster_score(2,4))
 print(dbscan_cluster_score(3,4))
-print(dbscan_cluster_score(4,4))
+print(dbscan_cluster_score(3.97,4))
 print(dbscan_cluster_score(5,4))
-print(dbscan_cluster_score(6,4))
+
+# for i in range(50):
+#     if max(dbscan_cluster_score(1 + 0.1*i,4)) >= 3:
+#         print(i)
 
 # Ici on a K=1 avec epsilon = 3 et min_points = 4
 
