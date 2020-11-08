@@ -164,11 +164,13 @@ df = df.apply(lambda x: x.fillna(x.mean()), axis=0)
 # colonne_gdp = df['GDP'].copy()
 # colonne_gdp.sort_values(ascending = False)
 
-print(df[df['GDP']>105000]) # valeur aberrante : PIB supérieur à 105000 valeur max PIB Luxembourg.
-# Indice 7 158 159 remplacement par donnees trouvees sur internet
-df['GDP'][7] = 52022
-df['GDP'][158] = 39435
-df['GDP'][159] = 48466
+print(df[df['GDP'] > 105000]) # valeur aberrante : PIB supérieur à 105000 valeur max PIB Luxembourg.
+# Indice 7, 158, 159 remplacement par donnees trouvees sur internet
+df.loc[7, 'GDP'] = 52022
+df.loc[158, 'GDP'] = 39435
+df.loc[159, 'GDP'] = 48466
+
+df.loc[12, 'life_expectation'] = 51.4 # Esperance de vie Nigeria
 
 # Normalisation des variables
 X = df.to_numpy()
