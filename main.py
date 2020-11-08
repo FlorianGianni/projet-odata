@@ -170,7 +170,8 @@ df.loc[7, 'GDP'] = 52022
 df.loc[158, 'GDP'] = 39435
 df.loc[159, 'GDP'] = 48466
 
-df.loc[12, 'life_expectation'] = 51.4 # Esperance de vie Nigeria
+df.loc[12, 'life_expectation'] = 51.4 # Esperance de vie Bangladesh
+df.loc[113, 'inflation'] = 10.4 # Inflation Nigeria
 
 # Normalisation des variables
 X = df.to_numpy()
