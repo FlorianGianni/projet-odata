@@ -278,7 +278,7 @@ cluster = gaussienne_cluster_score(4)
 
 affichage_par_cluster(df,4,cluster) 
 
-df.plot.scatter(x=0,y=7,c=cluster,colormap='plasma')
+df.plot.scatter(x=4,y=6,c=cluster,colormap='plasma')
 
 # On choisit K=4
 
@@ -297,7 +297,7 @@ print(dbscan_cluster_score(5,4))
 
 cluster = dbscan_cluster_score(1.2000000000000002,2)
 
-affichage_par_cluster(df,10,cluster) 
+affichage_par_cluster(df,9,cluster) 
 
 df.plot.scatter(x=4,y=8,c=cluster,colormap='plasma')
 
