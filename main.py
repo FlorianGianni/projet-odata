@@ -7,7 +7,6 @@ from scipy.cluster import hierarchy
 from sklearn.mixture import GaussianMixture
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-from sklearn import metrics
 from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldin_score
 from sklearn.decomposition import PCA
 from statistics import mean
@@ -37,7 +36,7 @@ df = [df1, df2, df3, df4, df5]
 
 def afficher(df, i, c=None, colormap=None):
     df.plot.scatter(x=0, y=1, c=c, colormap=colormap)
-    # plt.savefig('./results/etude_prealable/raw-' + str(i) + '.png')
+    plt.savefig('./results/etude_prealable/raw-' + str(i) + '.png')
 
 
 afficher(df1, 1)
@@ -55,8 +54,10 @@ def kmeans(df, i, n_clusters):
     X = df.to_numpy()
     cluster = KMeans(n_clusters=n_clusters, random_state=0).fit_predict(X)
     df.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
-    if i>2:
-        plt.title('ARI = ' + str(adjusted_rand_score(df.iloc[:,2],cluster)))
+    if i > 2:
+        ari = adjusted_rand_score(df.iloc[:,2], cluster)
+        print('Score de Rand ajusté df'+ str(i), ari)
+        plt.title('ARI = ' + str(ari))
     plt.savefig('./results/etude_prealable/kmeans-' + str(i) + '.png')
 
 
@@ -66,15 +67,6 @@ kmeans(df3, 3, n_clusters=2)
 kmeans(df4, 4, n_clusters=7)
 kmeans(df5, 5, n_clusters=3)
 
-def score_rand_ajuste_kmeans(df,i,n_clusters):
-    X = df.to_numpy()
-    cluster = KMeans(n_clusters=n_clusters, random_state=0).fit_predict(X)
-    print('Score de Rand ajusté df'+ str(i), adjusted_rand_score(df[2],cluster))
-    
-score_rand_ajuste_kmeans(df3,3,n_clusters=2)
-score_rand_ajuste_kmeans(df4,4,n_clusters=7)
-score_rand_ajuste_kmeans(df5,5,n_clusters=3)
-    
 # plt.close(fig='all')
 
 
@@ -88,9 +80,11 @@ def cha(df, i, method, metric, t):
     # plt.savefig('./results/etude_prealable/cha-dendrogram-' + str(i) + '.png')
     cluster = hierarchy.fcluster(Z1, t=t, criterion='distance')
     df.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
-    if i>2:
-        plt.title('ARI = ' + str(adjusted_rand_score(df.iloc[:,2],cluster)))
-    # plt.savefig('./results/etude_prealable/cha-' + str(i) + '.png')
+    if i > 2:
+        ari = adjusted_rand_score(df.iloc[:,2], cluster)
+        print('Score de Rand ajusté df'+ str(i), ari)
+        plt.title('ARI = ' + str(ari))
+    plt.savefig('./results/etude_prealable/cha-' + str(i) + '.png')
 
 
 cha(df1, 1, method='ward', metric='euclidean', t=20)
@@ -101,17 +95,6 @@ cha(df5, 5, method='ward', metric='euclidean', t=20)
 
 # plt.close(fig='all')
 
-def score_rand_ajuste_cha(df,i,method,metric,t):
-    X = df.to_numpy()
-    Z = StandardScaler().fit_transform(X)
-    Z1 = hierarchy.linkage(Z, method=method, metric=metric)
-    cluster = hierarchy.fcluster(Z1, t=t, criterion='distance')
-    print('Score de Rand ajusté df'+ str(i), adjusted_rand_score(df[2],cluster))
-
-score_rand_ajuste_cha(df3,3,method='ward',metric='euclidean',t=20)
-score_rand_ajuste_cha(df4,4,method='ward',metric='euclidean',t=9)
-score_rand_ajuste_cha(df5,5,method='ward',metric='euclidean',t=20)
-
 
 ### Methode Gausienne
 
@@ -119,9 +102,11 @@ def gaussian(df, i, n_components):
     X = df.to_numpy()
     cluster = GaussianMixture(n_components=n_components, random_state=0).fit_predict(X)
     df.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
-    if i>2:
-        plt.title('ARI = ' + str(adjusted_rand_score(df.iloc[:,2],cluster)))
-    # plt.savefig('./results/etude_prealable/gaussian-' + str(i) + '.png')
+    if i > 2:
+        ari = adjusted_rand_score(df.iloc[:,2], cluster)
+        print('Score de Rand ajusté df'+ str(i), ari)
+        plt.title('ARI = ' + str(ari))
+    plt.savefig('./results/etude_prealable/gaussian-' + str(i) + '.png')
 
 
 gaussian(df1, 1, n_components=2)
@@ -132,14 +117,6 @@ gaussian(df5, 5, n_components=3)
 
 # plt.close(fig='all')
 
-def score_rand_ajuste_gaussienne(df,i,n_components):
-    X = df.to_numpy()
-    cluster = GaussianMixture(n_components=n_components, random_state=0).fit_predict(X)
-    print('Score de Rand ajusté df'+ str(i), adjusted_rand_score(df[2],cluster))
-    
-score_rand_ajuste_gaussienne(df3,3,n_components=2)
-score_rand_ajuste_gaussienne(df4,4,n_components=7)
-score_rand_ajuste_gaussienne(df5,5,n_components=3)
 
 ### DBScan
 
@@ -147,9 +124,11 @@ def dbscan(df, i, eps, min_samples):
     X = df.to_numpy()
     cluster = DBSCAN(eps=eps, min_samples=min_samples).fit_predict(X)
     df.plot.scatter(x=0, y=1, c=cluster, colormap='plasma')
-    if i>2:
-        plt.title('ARI = ' + str(adjusted_rand_score(df.iloc[:,2],cluster)))
-    # plt.savefig('./results/etude_prealable/dbscan-' + str(i) + '.png')
+    if i > 2:
+        ari = adjusted_rand_score(df.iloc[:,2], cluster)
+        print('Score de Rand ajusté df'+ str(i), ari)
+        plt.title('ARI = ' + str(ari))
+    plt.savefig('./results/etude_prealable/dbscan-' + str(i) + '.png')
 
 
 dbscan(df1, 1, eps=10, min_samples=4)
@@ -159,18 +138,6 @@ dbscan(df4, 4, eps=2, min_samples=4)
 dbscan(df5, 5, eps=2, min_samples=4)
 
 # plt.close(fig='all')
-
-def score_rand_ajuste_dbscan(df, i, eps, min_samples):
-    X = df.to_numpy()
-    cluster = DBSCAN(eps=eps, min_samples=min_samples).fit_predict(X)
-    print('Score de Rand ajusté df'+ str(i), adjusted_rand_score(df[2],cluster))
-    
-score_rand_ajuste_dbscan(df3, 3, eps=2.7, min_samples=3)
-score_rand_ajuste_dbscan(df4, 4, eps=2, min_samples=4)
-score_rand_ajuste_dbscan(df5, 5, eps=2, min_samples=4)
-
-
-
 
 
 #### 3.Classement des principaux pays du monde en fonction de leur developpement
@@ -191,14 +158,14 @@ plt.show()
 # On se debarrasse du nom des pays et on remplit les donnees manquantes avec la moyenne
 colonne_nom = df['country']
 df = df.drop(labels=['country'], axis=1)
-df = df.apply(lambda x: x.fillna(x.mean()),axis=0)
+df = df.apply(lambda x: x.fillna(x.mean()), axis=0)
 
-# Repérage des valeurs aberrantes
+# Reperage des valeurs aberrantes
 # colonne_gdp = df['GDP'].copy()
 # colonne_gdp.sort_values(ascending = False)
 
 print(df[df['GDP']>105000]) # valeur aberrante : PIB supérieur à 105000 valeur max PIB Luxembourg.
-#Indice 7 158 159 remplacement par donnée trouvé sur internet
+# Indice 7 158 159 remplacement par donnees trouvees sur internet
 df['GDP'][7] = 52022
 df['GDP'][158] = 39435
 df['GDP'][159] = 48466
