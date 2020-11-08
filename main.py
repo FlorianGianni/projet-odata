@@ -189,6 +189,13 @@ plt.show()
 
 ### 3.4 Clustering des donnees
 
+def affichage_par_cluster(df,K,cluster):
+    df_c = df.copy()
+    df_c.insert(1, 'cluster', cluster)
+    df_c.insert(0,'country',colonne_nom)
+    for i in range(K):
+        print(df_c[df_c['cluster'] == i])
+
 ## K-means
 
 # K = 12
@@ -214,6 +221,8 @@ def k_means_cluster_score(K):
     print('Davies bouldin score kmeans K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
+methode_coude(10)  
+
 print(k_means_cluster_score(2))
 print(k_means_cluster_score(3))
 print(k_means_cluster_score(4))
@@ -221,7 +230,11 @@ print(k_means_cluster_score(5))
 print(k_means_cluster_score(6))
 print(k_means_cluster_score(7))
 
-methode_coude(10)
+cluster = k_means_cluster_score(4)
+
+affichage_par_cluster(df,4,cluster) 
+
+df.plot.scatter(x=6,y=8,c=cluster,colormap='plasma')
 
 # On choisit K=4
 
@@ -229,7 +242,7 @@ methode_coude(10)
 
 def CHA_cluster_score(method, metric, t):
     Z1 = hierarchy.linkage(Z, method=method, metric=metric)
-    # dn = hierarchy.dendrogram(Z1) # Pour avoir le t coupure
+    dn = hierarchy.dendrogram(Z1) # Pour avoir le t coupure
     cluster = hierarchy.fcluster(Z1, t=t, criterion='distance')
     K = max(cluster) # Le nombre de cluster
     print('silhouette score CHA K=' + str(K), silhouette_score(Z,labels=cluster))
@@ -241,7 +254,13 @@ print(CHA_cluster_score(method='ward', metric = 'euclidean', t=18))
 print(CHA_cluster_score(method='ward', metric = 'euclidean', t=15))
 print(CHA_cluster_score(method='ward', metric = 'euclidean', t=10))
 
-# On choisit K = 4 pour t=18
+cluster = CHA_cluster_score(method='ward',metric='euclidean',t=15)
+
+affichage_par_cluster(df,4,cluster) 
+
+df.plot.scatter(x=0,y=7,c=cluster,colormap='plasma')
+
+# On choisit K = 4 pour t=15
 
 def gaussienne_cluster_score(K):
     cluster = GaussianMixture(n_components=K, random_state=0).fit_predict(Z)
@@ -255,6 +274,12 @@ print(gaussienne_cluster_score(4))
 print(gaussienne_cluster_score(5))
 print(gaussienne_cluster_score(6))
 
+cluster = gaussienne_cluster_score(4)
+
+affichage_par_cluster(df,4,cluster) 
+
+df.plot.scatter(x=0,y=7,c=cluster,colormap='plasma')
+
 # On choisit K=4
 
 def dbscan_cluster_score(eps, min_samples):
@@ -264,11 +289,17 @@ def dbscan_cluster_score(eps, min_samples):
     print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
-print(dbscan_cluster_score(1.2,3))
+print(dbscan_cluster_score(1.2000000000000002,2))
 print(dbscan_cluster_score(2,4))
 print(dbscan_cluster_score(3,4))
 print(dbscan_cluster_score(3.97,4))
 print(dbscan_cluster_score(5,4))
+
+cluster = dbscan_cluster_score(1.2000000000000002,2)
+
+affichage_par_cluster(df,10,cluster) 
+
+df.plot.scatter(x=4,y=8,c=cluster,colormap='plasma')
 
 # for i in range(50):
 #     if max(dbscan_cluster_score(1 + 0.1*i,4)) >= 3:
