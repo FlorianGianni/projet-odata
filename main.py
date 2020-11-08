@@ -289,15 +289,15 @@ def dbscan_cluster_score(eps, min_samples):
     print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
-print(dbscan_cluster_score(1.2000000000000002,2))
+print(dbscan_cluster_score(2.2000000000000002,3))
 print(dbscan_cluster_score(2,4))
 print(dbscan_cluster_score(3,4))
 print(dbscan_cluster_score(3.97,4))
 print(dbscan_cluster_score(5,4))
 
-cluster = dbscan_cluster_score(1.2000000000000002,2)
+cluster = dbscan_cluster_score(1.2000000000000002,3)
 
-affichage_par_cluster(df,9,cluster) 
+affichage_par_cluster(df,4,cluster) 
 
 df.plot.scatter(x=4,y=8,c=cluster,colormap='plasma')
 
@@ -307,6 +307,8 @@ df.plot.scatter(x=4,y=8,c=cluster,colormap='plasma')
 
 # Ici on a K=1 avec epsilon = 3 et min_points = 4
 
+# colonne_pib = df['GDP'].copy()
+# colonne_pib.sort_values()
 
 ### 3.5 Clustering des données après réduction des dimensions
 
@@ -370,6 +372,7 @@ cercle_1 = plt.Circle((0,0),1)
 ax.add_artist(cercle_1)
 texte_cercle((correlation_centre(Z,0,pca)),correlation_centre(Z,1,pca))
 ligne_cercle((correlation_centre(Z,0,pca)),correlation_centre(Z,1,pca))
+plt.savefig('./results/etude_prealable/cercle_acp-1' + '.png')
 plt.show()
 
 fig, ax = plt.subplots(figsize=(8,8))
@@ -379,6 +382,7 @@ cercle_2 = plt.Circle((0,0),1)
 ax.add_artist(cercle_2)
 texte_cercle((correlation_centre(Z,2,pca)),correlation_centre(Z,3,pca))
 ligne_cercle((correlation_centre(Z,2,pca)),correlation_centre(Z,3,pca))
+plt.savefig('./results/etude_prealable/cercle_acp-2' + '.png')
 plt.show()
 
 # Interprétation des axes :
@@ -407,6 +411,8 @@ def k_means_acp(K):
     print('silhouette score kmeans K=' + str(K), silhouette_score(Z_acp,labels=cluster))
     print('Davies bouldin score kmeans K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
     plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    # nuage_individu_texte(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1])
+    plt.savefig('./results/etude_prealable/k_means_acp-' + '.png')
     plt.show()
     return (cluster)
 
@@ -420,16 +426,18 @@ def CHA_acp(method, metric, t):
     print('silhouette score CHA K=' + str(K), silhouette_score(Z_acp,labels=cluster))
     print('Davies bouldin score CHA K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
     plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.savefig('./results/etude_prealable/CHA_acp-' + '.png')
     plt.show()
     return(cluster)
 
-CHA_acp(method='ward',metric='euclidean',t=18)
+CHA_acp(method='ward',metric='euclidean',t=15)
 
 def gaussienne_acp(K):
     cluster = GaussianMixture(n_components=K, random_state=0).fit_predict(Z_acp)
     print('silhouette score Gaussienne K=' + str(K), silhouette_score(Z_acp,labels=cluster))
     print('Davies bouldin score Gausienne K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
     plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.savefig('./results/etude_prealable/gaussienne_acp-' + '.png')
     plt.show()
     return (cluster)
 
@@ -441,10 +449,11 @@ def dbscan_acp(eps, min_samples):
     print('silhouette score DBScan K=' + str(K), silhouette_score(Z_acp,labels=cluster))
     print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
     plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.savefig('./results/etude_prealable/dbscan_acp-' + '.png')
     plt.show()
     return (cluster)
 
-dbscan_acp(3,4)
+dbscan_acp(1.2000000000000002,3)
 
 print('Score de Rand ajuste k_means', adjusted_rand_score(k_means_cluster_score(4),k_means_acp(4)))
 print('Score de Rand ajuste CHA', adjusted_rand_score(CHA_cluster_score(method='ward',metric='euclidean',t=18),CHA_acp(method='ward',metric='euclidean',t=18)))
