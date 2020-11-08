@@ -411,8 +411,8 @@ def k_means_acp(K):
     print('silhouette score kmeans K=' + str(K), silhouette_score(Z_acp,labels=cluster))
     print('Davies bouldin score kmeans K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
     plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
-    # nuage_individu_texte(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1])
-    plt.savefig('./results/etude_prealable/k_means_acp' + '.png')
+    nuage_individu_texte(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1])
+    plt.savefig('./results/etude_prealable/k_means_acp-texte' + '.png')
     plt.show()
     return (cluster)
 
