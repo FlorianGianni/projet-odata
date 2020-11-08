@@ -8,7 +8,7 @@ from sklearn.mixture import GaussianMixture
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
-from sklearn.metrics import silhouette_score, adjusted_rand_score
+from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldin_score
 
 try:
     os.makedirs('./results/etude_prealable/')
@@ -214,9 +214,82 @@ plt.show()
 
 ## K-means
 
-K = 12
-kmeans = KMeans(n_clusters=K, random_state=0).fit(Z)
-cluster = kmeans.predict(Z)
-df.insert(1, 'cluster', cluster)
-for i in range(K):
-    print(df[df['cluster'] == i])
+# K = 12
+# kmeans = KMeans(n_clusters=K, random_state=0).fit(Z)
+# cluster = kmeans.predict(Z)
+# df.insert(1, 'cluster', cluster)
+# for i in range(K):
+#     print(df[df['cluster'] == i])
+
+def methode_coude(K):
+    distorsion = []
+    K = range(1,10)
+    for i in K:
+        kmeans = KMeans(n_clusters=i)
+        kmeans.fit(Z)
+        distorsion.append(kmeans.inertia_)
+    plt.plot(K,distorsion,'bx-')
+    plt.show()
+    
+def k_means_cluster_score(df, K):
+    cluster = KMeans(n_clusters=K, random_state=0).fit_predict(Z)
+    print('silhouette score kmeans K=' + str(K), silhouette_score(Z,labels=cluster))
+    print('Davies bouldin score kmeans K=' + str(K), davies_bouldin_score(Z,labels=cluster))
+    return (cluster)
+
+print(k_means_cluster_score(df,2))
+print(k_means_cluster_score(df,3))
+print(k_means_cluster_score(df,4))
+print(k_means_cluster_score(df,5))
+print(k_means_cluster_score(df,6))
+
+methode_coude(10)
+
+# On choisit K=4
+
+## CHA
+
+def CHA_cluster_score(df, method, metric, t):
+    Z1 = hierarchy.linkage(Z, method=method, metric=metric)
+    # dn = hierarchy.dendrogram(Z1) # Pour avoir le t coupure
+    cluster = hierarchy.fcluster(Z1, t=t, criterion='distance')
+    K = max(cluster) # Le nombre de cluster
+    print('silhouette score CHA K=' + str(K), silhouette_score(Z,labels=cluster))
+    print('Davies bouldin score CHA K=' + str(K), davies_bouldin_score(Z,labels=cluster))
+    return(cluster)
+    
+print(CHA_cluster_score(df, method='ward', metric = 'euclidean', t=25))
+print(CHA_cluster_score(df, method='ward', metric = 'euclidean', t=18))
+print(CHA_cluster_score(df, method='ward', metric = 'euclidean', t=15))
+
+# On choisit K = 4
+
+def gaussienne_cluster_score(df, K):
+    cluster = GaussianMixture(n_components=K, random_state=0).fit_predict(Z)
+    print('silhouette score Gaussienne K=' + str(K), silhouette_score(Z,labels=cluster))
+    print('Davies bouldin score Gausienne K=' + str(K), davies_bouldin_score(Z,labels=cluster))
+    return (cluster)
+
+print(gaussienne_cluster_score(df,2))
+print(gaussienne_cluster_score(df,3))
+print(gaussienne_cluster_score(df,4))
+print(gaussienne_cluster_score(df,5))
+print(gaussienne_cluster_score(df,6))
+
+# On choisit K=4
+
+def dbscan_cluster_score(df, eps, min_samples):
+    cluster = DBSCAN(eps=eps, min_samples=min_samples).fit_predict(Z)
+    K = (max(cluster) + 1)
+    print('silhouette score DBScan K=' + str(K), silhouette_score(Z,labels=cluster))
+    print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z,labels=cluster))
+    return (cluster)
+
+print(dbscan_cluster_score(df,1,4))
+print(dbscan_cluster_score(df,2,4))
+print(dbscan_cluster_score(df,3,4))
+print(dbscan_cluster_score(df,4,4))
+print(dbscan_cluster_score(df,5,4))
+print(dbscan_cluster_score(df,6,4))
+
+# Ici on a K=1 avec epsilon = 3 et min_points = 4
