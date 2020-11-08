@@ -169,6 +169,10 @@ score_rand_ajuste_dbscan(df3, 3, eps=2.7, min_samples=3)
 score_rand_ajuste_dbscan(df4, 4, eps=2, min_samples=4)
 score_rand_ajuste_dbscan(df5, 5, eps=2, min_samples=4)
 
+
+
+
+
 #### 3.Classement des principaux pays du monde en fonction de leur developpement
 
 ### 3.1 Examen des donnees
@@ -185,21 +189,22 @@ plt.show()
 ### 3.2 Preparation des donnees
 
 # On se debarrasse du nom des pays et on remplit les donnees manquantes avec la moyenne
-X = df.drop(labels=['country'], axis=1)
-X = X.apply(lambda x: x.fillna(x.mean()),axis=0)
+colonne_nom = df['country']
+df = df.drop(labels=['country'], axis=1)
+df = df.apply(lambda x: x.fillna(x.mean()),axis=0)
 
 # Repérage des valeurs aberrantes
 # colonne_gdp = df['GDP'].copy()
 # colonne_gdp.sort_values(ascending = False)
 
-print(X[X['GDP']>105000]) # valeur aberrante : PIB supérieur à 105000 valeur max PIB Luxembourg.
+print(df[df['GDP']>105000]) # valeur aberrante : PIB supérieur à 105000 valeur max PIB Luxembourg.
 #Indice 7 158 159 remplacement par donnée trouvé sur internet
-X['GDP'][7] = 52022
-X['GDP'][158] = 39435
-X['GDP'][159] = 48466
+df['GDP'][7] = 52022
+df['GDP'][158] = 39435
+df['GDP'][159] = 48466
 
 # Normalisation des variables
-X = X.to_numpy()
+X = df.to_numpy()
 sc = StandardScaler()
 sc.fit(X)
 Z = sc.transform(X)
@@ -233,17 +238,17 @@ def methode_coude(K):
     plt.plot(K,distorsion,'bx-')
     plt.show()
     
-def k_means_cluster_score(df, K):
+def k_means_cluster_score(K):
     cluster = KMeans(n_clusters=K, random_state=0).fit_predict(Z)
     print('silhouette score kmeans K=' + str(K), silhouette_score(Z,labels=cluster))
     print('Davies bouldin score kmeans K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
-print(k_means_cluster_score(df,2))
-print(k_means_cluster_score(df,3))
-print(k_means_cluster_score(df,4))
-print(k_means_cluster_score(df,5))
-print(k_means_cluster_score(df,6))
+print(k_means_cluster_score(2))
+print(k_means_cluster_score(3))
+print(k_means_cluster_score(4))
+print(k_means_cluster_score(5))
+print(k_means_cluster_score(6))
 
 methode_coude(10)
 
@@ -251,7 +256,7 @@ methode_coude(10)
 
 ## CHA
 
-def CHA_cluster_score(df, method, metric, t):
+def CHA_cluster_score(method, metric, t):
     Z1 = hierarchy.linkage(Z, method=method, metric=metric)
     # dn = hierarchy.dendrogram(Z1) # Pour avoir le t coupure
     cluster = hierarchy.fcluster(Z1, t=t, criterion='distance')
@@ -260,39 +265,39 @@ def CHA_cluster_score(df, method, metric, t):
     print('Davies bouldin score CHA K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return(cluster)
     
-print(CHA_cluster_score(df, method='ward', metric = 'euclidean', t=25))
-print(CHA_cluster_score(df, method='ward', metric = 'euclidean', t=18))
-print(CHA_cluster_score(df, method='ward', metric = 'euclidean', t=15))
+print(CHA_cluster_score(method='ward', metric = 'euclidean', t=25))
+print(CHA_cluster_score(method='ward', metric = 'euclidean', t=18))
+print(CHA_cluster_score(method='ward', metric = 'euclidean', t=15))
 
-# On choisit K = 4
+# On choisit K = 4 pour t=18
 
-def gaussienne_cluster_score(df, K):
+def gaussienne_cluster_score(K):
     cluster = GaussianMixture(n_components=K, random_state=0).fit_predict(Z)
     print('silhouette score Gaussienne K=' + str(K), silhouette_score(Z,labels=cluster))
     print('Davies bouldin score Gausienne K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
-print(gaussienne_cluster_score(df,2))
-print(gaussienne_cluster_score(df,3))
-print(gaussienne_cluster_score(df,4))
-print(gaussienne_cluster_score(df,5))
-print(gaussienne_cluster_score(df,6))
+print(gaussienne_cluster_score(2))
+print(gaussienne_cluster_score(3))
+print(gaussienne_cluster_score(4))
+print(gaussienne_cluster_score(5))
+print(gaussienne_cluster_score(6))
 
 # On choisit K=4
 
-def dbscan_cluster_score(df, eps, min_samples):
+def dbscan_cluster_score(eps, min_samples):
     cluster = DBSCAN(eps=eps, min_samples=min_samples).fit_predict(Z)
     K = (max(cluster) + 1)
     print('silhouette score DBScan K=' + str(K), silhouette_score(Z,labels=cluster))
     print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z,labels=cluster))
     return (cluster)
 
-print(dbscan_cluster_score(df,1,4))
-print(dbscan_cluster_score(df,2,4))
-print(dbscan_cluster_score(df,3,4))
-print(dbscan_cluster_score(df,4,4))
-print(dbscan_cluster_score(df,5,4))
-print(dbscan_cluster_score(df,6,4))
+print(dbscan_cluster_score(1,4))
+print(dbscan_cluster_score(2,4))
+print(dbscan_cluster_score(3,4))
+print(dbscan_cluster_score(4,4))
+print(dbscan_cluster_score(5,4))
+print(dbscan_cluster_score(6,4))
 
 # Ici on a K=1 avec epsilon = 3 et min_points = 4
 
@@ -300,32 +305,142 @@ print(dbscan_cluster_score(df,6,4))
 ### 3.5 Clustering des données après réduction des dimensions
 
 # Critere 1 : Methode du coude
-pca = PCA(n_components=8) #Pour déterminer le nombre d'axe
-pca.fit(Z)
-Z_acp = pca.transform(Z)
-print(pca.explained_variance_)
-print(pca.explained_variance_ratio_)
+pca_test = PCA(n_components=8) #Pour déterminer le nombre d'axe
+pca_test.fit(Z)
+Z_test = pca_test.transform(Z)
+print(pca_test.explained_variance_)
+print(pca_test.explained_variance_ratio_)
 
 abscisse = [i for i in range(1,9)]
-plt.plot(abscisse,pca.explained_variance_)
+plt.plot(abscisse,pca_test.explained_variance_,'bx-')
 plt.show()
 
 # Critere 2 : part d'inertie à au moins 80%
-print(np.cumsum(pca.explained_variance_ratio_)) #Part d'inertie cumulé
+print(np.cumsum(pca_test.explained_variance_ratio_)) #Part d'inertie cumulé
 
 #Critère 3 : régle de Kaiser
 def Kaiser():
-    n = len(pca.explained_variance_ratio_)
+    n = len(pca_test.explained_variance_ratio_)
     conserve = []
-    moyenne = mean(pca.explained_variance_ratio_)
+    moyenne = mean(pca_test.explained_variance_ratio_)
     for i in range(n):
-        if pca.explained_variance_ratio_[i] > moyenne:
-            conserve.append(pca.explained_variance_ratio_)
+        if pca_test.explained_variance_ratio_[i] > moyenne:
+            conserve.append(pca_test.explained_variance_ratio_)
     return(conserve)
         
 print(Kaiser())
 
 # On converse 4 axes avec critère 2
 
+pca = PCA(n_components=4)
+pca.fit(Z)
+Z_acp = pca.transform(Z)
 
+def correlation_centre(Z,j,pca): #variable centrée zj et facteur dk à récupérer
+    n = len(Z[0]) #on travaille sur les variables donc sur une colonne (donc on parcourt les lignes)
+    valeurs_propres_Z, vecteurs_propres_Z = pca.explained_variance_,pca.components_ 
+    correlation = []
+    for i in range(n):
+        cor = ((valeurs_propres_Z[j])**(1/2))*(vecteurs_propres_Z[j][i])
+        correlation.append(cor)
+    return(correlation)
 
+def texte_cercle(X,Y):
+    n = len(X)
+    for i in range(n):
+        plt.text(X[i],Y[i],df.columns[i])
+    return()
+
+def ligne_cercle(X,Y):
+    n = len(X)
+    for i in range(n):
+        plt.arrow(0,0,X[i],Y[i])
+    return()
+
+fig, ax = plt.subplots(figsize=(8,8))
+ax.set_xlim(-1,1)
+ax.set_ylim(-1,1)
+cercle_1 = plt.Circle((0,0),1)
+ax.add_artist(cercle_1)
+texte_cercle((correlation_centre(Z,0,pca)),correlation_centre(Z,1,pca))
+ligne_cercle((correlation_centre(Z,0,pca)),correlation_centre(Z,1,pca))
+plt.show()
+
+fig, ax = plt.subplots(figsize=(8,8))
+ax.set_xlim(-1,1)
+ax.set_ylim(-1,1)
+cercle_2 = plt.Circle((0,0),1)
+ax.add_artist(cercle_2)
+texte_cercle((correlation_centre(Z,2,pca)),correlation_centre(Z,3,pca))
+ligne_cercle((correlation_centre(Z,2,pca)),correlation_centre(Z,3,pca))
+plt.show()
+
+# Interprétation des axes :
+
+def nuage_individu(Z_acp): 
+    n = len(Z_acp)
+    X = np.zeros(n)
+    Y = np.zeros(n)
+    Z = np.zeros(n)
+    T = np.zeros(n)
+    for i in range(n):
+        X[i] = Z_acp[i][0]
+        Y[i] = Z_acp[i][1]
+        Z[i] = Z_acp[i][2]
+        T[i] = Z_acp[i][3]
+    return(X,Y,Z,T)
+
+def nuage_individu_texte(X,Y):
+    n = len(X)
+    for i in range(n):
+        plt.text(X[i],Y[i],colonne_nom[i])
+    return()
+
+def k_means_acp(K):
+    cluster = KMeans(n_clusters=K, random_state=0).fit_predict(Z_acp)
+    print('silhouette score kmeans K=' + str(K), silhouette_score(Z_acp,labels=cluster))
+    print('Davies bouldin score kmeans K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
+    plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.show()
+    return (cluster)
+
+k_means_acp(4)
+
+def CHA_acp(method, metric, t):
+    Z1 = hierarchy.linkage(Z_acp, method=method, metric=metric)
+    # dn = hierarchy.dendrogram(Z1) # Pour avoir le t coupure
+    cluster = hierarchy.fcluster(Z1, t=t, criterion='distance')
+    K = max(cluster) # Le nombre de cluster
+    print('silhouette score CHA K=' + str(K), silhouette_score(Z_acp,labels=cluster))
+    print('Davies bouldin score CHA K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
+    plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.show()
+    return(cluster)
+
+CHA_acp(method='ward',metric='euclidean',t=18)
+
+def gaussienne_acp(K):
+    cluster = GaussianMixture(n_components=K, random_state=0).fit_predict(Z_acp)
+    print('silhouette score Gaussienne K=' + str(K), silhouette_score(Z_acp,labels=cluster))
+    print('Davies bouldin score Gausienne K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
+    plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.show()
+    return (cluster)
+
+gaussienne_acp(4)
+
+def dbscan_acp(eps, min_samples):
+    cluster = DBSCAN(eps=eps, min_samples=min_samples).fit_predict(Z_acp)
+    K = (max(cluster) + 1)
+    print('silhouette score DBScan K=' + str(K), silhouette_score(Z_acp,labels=cluster))
+    print('Davies bouldin score DBscan K=' + str(K), davies_bouldin_score(Z_acp,labels=cluster))
+    plt.scatter(nuage_individu(Z_acp)[0],nuage_individu(Z_acp)[1],c=cluster,cmap='plasma')
+    plt.show()
+    return (cluster)
+
+dbscan_acp(3,4)
+
+print('Score de Rand ajuste k_means', adjusted_rand_score(k_means_cluster_score(4),k_means_acp(4)))
+print('Score de Rand ajuste CHA', adjusted_rand_score(CHA_cluster_score(method='ward',metric='euclidean',t=18),CHA_acp(method='ward',metric='euclidean',t=18)))
+print('Score de Rand ajuste gaussienne', adjusted_rand_score(gaussienne_cluster_score(4),gaussienne_acp(4)))
+print('Score de Rand ajuste DBScan', adjusted_rand_score(dbscan_cluster_score(3,4),dbscan_acp(3,4)))
