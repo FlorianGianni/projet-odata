@@ -9,6 +9,8 @@ from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
 from sklearn.metrics import silhouette_score, adjusted_rand_score, davies_bouldin_score
+from sklearn.decomposition import PCA
+from statistics import mean
 
 try:
     os.makedirs('./results/etude_prealable/')
@@ -293,3 +295,37 @@ print(dbscan_cluster_score(df,5,4))
 print(dbscan_cluster_score(df,6,4))
 
 # Ici on a K=1 avec epsilon = 3 et min_points = 4
+
+
+### 3.5 Clustering des données après réduction des dimensions
+
+# Critere 1 : Methode du coude
+pca = PCA(n_components=8) #Pour déterminer le nombre d'axe
+pca.fit(Z)
+Z_acp = pca.transform(Z)
+print(pca.explained_variance_)
+print(pca.explained_variance_ratio_)
+
+abscisse = [i for i in range(1,9)]
+plt.plot(abscisse,pca.explained_variance_)
+plt.show()
+
+# Critere 2 : part d'inertie à au moins 80%
+print(np.cumsum(pca.explained_variance_ratio_)) #Part d'inertie cumulé
+
+#Critère 3 : régle de Kaiser
+def Kaiser():
+    n = len(pca.explained_variance_ratio_)
+    conserve = []
+    moyenne = mean(pca.explained_variance_ratio_)
+    for i in range(n):
+        if pca.explained_variance_ratio_[i] > moyenne:
+            conserve.append(pca.explained_variance_ratio_)
+    return(conserve)
+        
+print(Kaiser())
+
+# On converse 4 axes avec critère 2
+
+
+
